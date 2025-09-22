@@ -1,22 +1,17 @@
-import { Star, Clock, Users, BookOpen, Play, Award } from "lucide-react";
-import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
-import ProfileModal from "../components/ProfileModal";
+import { useEnrollments } from "../hooks/useEnrollement";
+import { useCourses } from "../hooks/useCourse";
 import {
   deleteAccountApi,
   editProfileApi,
   getProfileApi,
-  logoutApi,
 } from "../services/authService";
-import { toast } from "react-toastify";
-import { setUser, clearCredentials } from "../reducers/authSlice";
-import { useCourses } from "../hooks/useCourse";
-import { usePayment } from "../hooks/usePayment";
+import { setUser } from "../reducers/authSlice";
+import ProfileModal from "../components/ProfileModal";
 import EnrollmentFormModal from "../components/EnrollementModalForm";
-import { useEnrollments } from "../hooks/useEnrollement";
-
+import { Award, BookOpen, Play, Users } from "lucide-react";
 const Homepage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -24,21 +19,16 @@ const Homepage = () => {
   const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
 
   const user = useSelector((state) => state.auth.user);
-  // console.log(user);
-  // const payments = useSelector((state) => state.payment?.payments || []);
+  console.log(user);
 
   const { courses, loadCourses, loading, error } = useCourses();
-  // const { handlePayment, loading: paymentLoading } = usePayment();
   const [selectedCourse, setSelectedCourse] = useState(null);
   const { enrollments, loadUserEnrollments } = useEnrollments();
-  // console.log(enrollments);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const res = await getProfileApi();
-        // console.log(res);
-        // assuming backend me enrolledCourses bhi aa raha hai
         dispatch(setUser(res.data));
       } catch (err) {
         console.log("Failed to fetch user:", err);
@@ -98,101 +88,116 @@ const Homepage = () => {
     { icon: Award, title: "Certificates", desc: "Industry recognized" },
     { icon: Users, title: "Community", desc: "24/7 student support" },
   ];
-
+  // ✅ Corrected: move this outside of JSX
   const isCourseBought = (courseId) => {
-    console.log(courseId);
     if (!user?.enrolledCourses || user.enrolledCourses.length === 0)
       return false;
-
-    // enrolledCourses me IDs hain, objects nahi
-    // console.log(user.enrolledCourses.includes(courseId))
-    return user.enrolledCourses.includes(courseId);
+    return user.enrolledCourses.some(
+      (enroll) => enroll.course && enroll.course._id === courseId
+    );
   };
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-purple-50">
       {/* ===== Header ===== */}
       <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
+        {" "}
         <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
+          {" "}
           <div className="flex justify-between items-center py-4">
+            {" "}
             <div className="flex items-center space-x-2">
+              {" "}
               <div className="w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <BookOpen className="h-6 w-6 text-white" />
-              </div>
+                {" "}
+                <BookOpen className="h-6 w-6 text-white" />{" "}
+              </div>{" "}
               <span className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                LearnHub
-              </span>
-            </div>
-
+                {" "}
+                LearnHub{" "}
+              </span>{" "}
+            </div>{" "}
             <nav className="hidden md:flex space-x-8">
+              {" "}
               <a
                 href="#"
                 className="text-gray-600 hover:text-indigo-600 font-medium transition-colors"
               >
-                Courses
-              </a>
+                {" "}
+                Courses{" "}
+              </a>{" "}
               <a
                 href="#"
                 className="text-gray-600 hover:text-indigo-600 font-medium transition-colors"
               >
-                About
-              </a>
+                {" "}
+                About{" "}
+              </a>{" "}
               <a
                 href="#"
                 className="text-gray-600 hover:text-indigo-600 font-medium transition-colors"
               >
-                Contact
-              </a>
-            </nav>
-
+                {" "}
+                Contact{" "}
+              </a>{" "}
+            </nav>{" "}
             <div className="flex items-center space-x-4">
+              {" "}
               {user ? (
                 <div
                   className="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center cursor-pointer hover:ring-2 hover:ring-indigo-300 transition"
                   onClick={() => setIsProfileOpen(true)}
                 >
-                  <Users className="h-5 w-5 text-white" />
+                  {" "}
+                  <Users className="h-5 w-5 text-white" />{" "}
                 </div>
               ) : (
                 <>
+                  {" "}
                   <button className="text-gray-600 hover:text-indigo-600 font-medium transition-colors">
-                    Login
-                  </button>
+                    {" "}
+                    Login{" "}
+                  </button>{" "}
                   <button className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-2 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105">
-                    Sign Up
-                  </button>
+                    {" "}
+                    Sign Up{" "}
+                  </button>{" "}
                 </>
-              )}
-            </div>
-          </div>
-        </div>
+              )}{" "}
+            </div>{" "}
+          </div>{" "}
+        </div>{" "}
       </header>
-
-      {/* ===== Hero Section ===== */}
+      {/* ===== Hero Section ===== */}{" "}
       <section className="py-20 px-4 sm:px-6 lg:px-8 text-center">
+        {" "}
         <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-          Master New Skills with
+          {" "}
+          Master New Skills with{" "}
           <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent block">
-            Expert-Led Courses
-          </span>
-        </h1>
+            {" "}
+            Expert-Led Courses{" "}
+          </span>{" "}
+        </h1>{" "}
         <p className="text-xl text-gray-600 mb-8 mx-auto">
+          {" "}
           Join thousands of students learning from industry experts. Build real
-          projects, earn certificates, and advance your career.
-        </p>
+          projects, earn certificates, and advance your career.{" "}
+        </p>{" "}
         <div className="flex flex-wrap justify-center gap-4 mb-12">
+          {" "}
           {features.map((feature, idx) => (
             <div
               key={idx}
               className="flex items-center bg-white/60 backdrop-blur-sm rounded-full px-6 py-3 border border-gray-200"
             >
-              <feature.icon className="h-5 w-5 text-indigo-600 mr-2" />
-              <span className="text-gray-700 font-medium">{feature.title}</span>
+              {" "}
+              <feature.icon className="h-5 w-5 text-indigo-600 mr-2" />{" "}
+              <span className="text-gray-700 font-medium">{feature.title}</span>{" "}
             </div>
-          ))}
-        </div>
+          ))}{" "}
+        </div>{" "}
       </section>
-
       {/* ===== Courses Section ===== */}
       <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="w-full px-20 mx-auto">
@@ -220,7 +225,7 @@ const Homepage = () => {
               {courses.map((course) => (
                 <div
                   key={course._id}
-                   onClick={() => navigate(`/course/${course._id}`)}
+                  onClick={() => navigate(`/course/${course._id}`)}
                   className="group bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
                 >
                   <div className="relative overflow-hidden">
@@ -259,13 +264,14 @@ const Homepage = () => {
                       </button>
                     ) : (
                       <button
-                        onClick={() => {
-                          if (!user?.id) {
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (!user?._id) {
                             toast.error("Please login to buy the course");
                             return;
                           }
-                          setSelectedCourse(course); // ✅ Set selected course
-                          setIsEnrollModalOpen(true); // ✅ Open modal
+                          setSelectedCourse(course);
+                          setIsEnrollModalOpen(true);
                         }}
                         disabled={!user}
                         className="w-full mt-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-300"
@@ -280,106 +286,141 @@ const Homepage = () => {
           )}
         </div>
       </section>
-
-      {/* ===== Footer ===== */}
+      {/* ===== Footer ===== */}{" "}
       <footer className="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8">
+        {" "}
         <div className="max-w-7xl mx-auto">
+          {" "}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {" "}
             <div>
+              {" "}
               <div className="flex items-center space-x-2 mb-4">
+                {" "}
                 <div className="w-8 h-8 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center">
-                  <BookOpen className="h-5 w-5 text-white" />
-                </div>
-                <span className="text-xl font-bold">LearnHub</span>
-              </div>
+                  {" "}
+                  <BookOpen className="h-5 w-5 text-white" />{" "}
+                </div>{" "}
+                <span className="text-xl font-bold">LearnHub</span>{" "}
+              </div>{" "}
               <p className="text-gray-400 text-sm">
+                {" "}
                 Empowering learners worldwide with quality education and
-                practical skills.
-              </p>
-            </div>
+                practical skills.{" "}
+              </p>{" "}
+            </div>{" "}
             <div>
-              <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+              {" "}
+              <h3 className="text-lg font-semibold mb-4">Quick Links</h3>{" "}
               <ul className="space-y-2 text-gray-400 text-sm">
+                {" "}
                 <li>
+                  {" "}
                   <a href="#" className="hover:text-white transition-colors">
-                    About Us
-                  </a>
-                </li>
+                    {" "}
+                    About Us{" "}
+                  </a>{" "}
+                </li>{" "}
                 <li>
+                  {" "}
                   <a href="#" className="hover:text-white transition-colors">
-                    Courses
-                  </a>
-                </li>
+                    {" "}
+                    Courses{" "}
+                  </a>{" "}
+                </li>{" "}
                 <li>
+                  {" "}
                   <a href="#" className="hover:text-white transition-colors">
-                    Instructors
-                  </a>
-                </li>
+                    {" "}
+                    Instructors{" "}
+                  </a>{" "}
+                </li>{" "}
                 <li>
+                  {" "}
                   <a href="#" className="hover:text-white transition-colors">
-                    Contact
-                  </a>
-                </li>
-              </ul>
-            </div>
+                    {" "}
+                    Contact{" "}
+                  </a>{" "}
+                </li>{" "}
+              </ul>{" "}
+            </div>{" "}
             <div>
-              <h3 className="text-lg font-semibold mb-4">Support</h3>
+              {" "}
+              <h3 className="text-lg font-semibold mb-4">Support</h3>{" "}
               <ul className="space-y-2 text-gray-400 text-sm">
+                {" "}
                 <li>
+                  {" "}
                   <a href="#" className="hover:text-white transition-colors">
-                    Help Center
-                  </a>
-                </li>
+                    {" "}
+                    Help Center{" "}
+                  </a>{" "}
+                </li>{" "}
                 <li>
+                  {" "}
                   <a href="#" className="hover:text-white transition-colors">
-                    Community
-                  </a>
-                </li>
+                    {" "}
+                    Community{" "}
+                  </a>{" "}
+                </li>{" "}
                 <li>
+                  {" "}
                   <a href="#" className="hover:text-white transition-colors">
-                    Privacy Policy
-                  </a>
-                </li>
+                    {" "}
+                    Privacy Policy{" "}
+                  </a>{" "}
+                </li>{" "}
                 <li>
+                  {" "}
                   <a href="#" className="hover:text-white transition-colors">
-                    Terms of Service
-                  </a>
-                </li>
-              </ul>
-            </div>
+                    {" "}
+                    Terms of Service{" "}
+                  </a>{" "}
+                </li>{" "}
+              </ul>{" "}
+            </div>{" "}
             <div>
-              <h3 className="text-lg font-semibold mb-4">Connect</h3>
+              {" "}
+              <h3 className="text-lg font-semibold mb-4">Connect</h3>{" "}
               <ul className="space-y-2 text-gray-400 text-sm">
+                {" "}
                 <li>
+                  {" "}
                   <a href="#" className="hover:text-white transition-colors">
-                    Twitter
-                  </a>
-                </li>
+                    {" "}
+                    Twitter{" "}
+                  </a>{" "}
+                </li>{" "}
                 <li>
+                  {" "}
                   <a href="#" className="hover:text-white transition-colors">
-                    LinkedIn
-                  </a>
-                </li>
+                    {" "}
+                    LinkedIn{" "}
+                  </a>{" "}
+                </li>{" "}
                 <li>
+                  {" "}
                   <a href="#" className="hover:text-white transition-colors">
-                    Facebook
-                  </a>
-                </li>
+                    {" "}
+                    Facebook{" "}
+                  </a>{" "}
+                </li>{" "}
                 <li>
+                  {" "}
                   <a href="#" className="hover:text-white transition-colors">
-                    Instagram
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
+                    {" "}
+                    Instagram{" "}
+                  </a>{" "}
+                </li>{" "}
+              </ul>{" "}
+            </div>{" "}
+          </div>{" "}
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
-            © 2024 LearnHub. All rights reserved.
-          </div>
-        </div>
+            {" "}
+            © 2024 LearnHub. All rights reserved.{" "}
+          </div>{" "}
+        </div>{" "}
       </footer>
-
-      {/* ===== Profile Modal ===== */}
       {isProfileOpen && user && (
         <ProfileModal
           student={user}
@@ -389,12 +430,11 @@ const Homepage = () => {
           onLogout={handleLogout}
         />
       )}
-
       <EnrollmentFormModal
         isOpen={isEnrollModalOpen}
         onClose={() => setIsEnrollModalOpen(false)}
         course={selectedCourse}
-        studentId={user?.id}
+        studentId={user?._id}
       />
     </div>
   );

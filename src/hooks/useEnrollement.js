@@ -24,7 +24,6 @@ export function useEnrollments() {
   const dispatch = useDispatch();
   const { list, currentEnrollment, loading, error, cancelledEnrollments } =
     useSelector((s) => s.enrolles);
-  console.log(list);
 
   // Load all enrollments
   const loadEnrollments = async () => {
@@ -103,7 +102,7 @@ export function useEnrollments() {
   const loadUserEnrollments = async (studentId) => {
     try {
       dispatch(setLoading(true));
-      const res = await getEnrollApi(); // currently fetch all
+      const res = await getEnrollApi(); 
       // filter only current user's enrollments
       const userEnrollments = res.data?.message.filter(
         (enroll) => enroll.student._id === studentId
