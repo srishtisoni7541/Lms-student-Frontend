@@ -19,7 +19,7 @@ const Homepage = () => {
   const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
 
   const user = useSelector((state) => state.auth.user);
-  console.log(user);
+  // console.log(user);
 
   const { courses, loadCourses, loading, error } = useCourses();
   const [selectedCourse, setSelectedCourse] = useState(null);
