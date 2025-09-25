@@ -11,7 +11,7 @@ const ProtectedRoute = ({ children }) => {
 
   if (!isEnrolled) {
     // redirect to courses page ya show message
-    return <Navigate to="/courses" replace />;
+    return <Navigate to="/home" />;
   }
 
   return children;
